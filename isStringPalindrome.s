@@ -65,7 +65,7 @@
 	nop
 	mov	%o0, %l0
 	ldub	[%i0+%l3], %l1	!load the last char to %l1
-	mov	%l1, %o0
+	stb	%l1, [%o0]
 	call	tolower		!convert the last char to lowercase
 	nop
 	mov	%o0, %l1
