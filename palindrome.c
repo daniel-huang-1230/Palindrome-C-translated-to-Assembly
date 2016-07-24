@@ -113,7 +113,12 @@ if(openFile!=NULL) {
     if(flag==SFLAG)
     {
       if(isStringPalindrome(str)!=0) {
-      printf("use assembly code");
+      (void)printf("testing assembly code...\n");
+      
+
+
+
+
        }
 
       }
@@ -126,13 +131,30 @@ if(openFile!=NULL) {
 
 
 
-fclose(filePtr); /*close the file at the end*/
+(void)fclose(filePtr); /*close the file at the end*/
 }
 
+else if(openFile==NULL) {
+
+/*implement the default stdin input cases*/
+
+if(flag==SFLAG) {/*if the string flag is set*/
+
+char inputStr[BUFSIZ];
+scanf("%s",inputStr);
+
+if(isStringPalindrome(inputStr)==1){
+  (void)printf("Yes! it is a palindrome\n");
+}
+else {
+
+  (void)printf("it's NOT a palindrome\n");
+}
+
+  }
 
 
-/*don't forget to implement the stdin input cases*/
 
-
+}
   return EXIT_SUCCESS;
 }

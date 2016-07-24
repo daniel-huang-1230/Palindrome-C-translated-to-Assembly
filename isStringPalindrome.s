@@ -28,8 +28,13 @@
  * Return: 1 if true; 0 otherwise
  * Registers Used:
  * TODO
+ *	%g0 - used as 0 (NULL)
  *	%i0 - the passed in string(arg1)
- *
+ *	%l0 - the first char
+ *	%l1 - the last char
+ *	%l2 - the allocated new string pointer
+ *	%l3 - store the length-1(offset) of the string	
+ *	%l4 - store the value of length-2 
  */
 
  isStringPalindrome:
@@ -53,8 +58,66 @@
 	cmp	%o0, 2		!check if the string length=2
 	be	length2
 	nop
+	! if the length of string is greater than 2
+	sub	%o0,1, %l3	!copy (length-1) to %l3
+	mov	%i0, %o0	!prepare argument for tolower
+	call	tolower
+	nop
+	mov	%o0, %l0
+	ldub	[%i0+%l3], %l1	!load the last char to %l1
+	mov	%l1, %o0
+	call	tolower		!convert the last char to lowercase
+	nop
+	mov	%o0, %l1
+	cmp	%l0, %l1	!compare the first char to last char
+	bne	false		!branch if they are not equal
+	nop
 
+	!if the first&last chars are equal, compare the middle section
+	sub	%l3,1,%l4	!store the value of length-2 in %l4
+	!allocate memory for a new string(the middle section)
+	mov	%l4, %o0
+	mov	1, %o1		!the size of a char is 1 byte
+	call	calloc		!call calloc 
+	nop
+	
+	!deal with errors that might occur when calling calloc
+	cmp	%o0, 0		!check if calloc fails(return NULL)
+	be	error
+	nop
+	mov	%o0, %l2	!put the allocated memory area in %l2
+	!copy the middle section by calling strncpy
+	mov	%l2, %o0
+	add	%i0,1,%o1	!i0+1 points to the second char in str
+	mov	%l4, %o2	!put the number of characters to copy to %o2
+	call	strncpy
+	nop
+	
+	!call isStringPalindrome recursively
+	mov	%o0, %l5
+	mov	%l5, %o0
+	call	isStringPalindrome
+	nop
+	! back from recursion
+	mov	%o0, %i0	!put the return value from recursive call
+				!back to the final return value
+	ba	end
+	nop
 length2:
+	ldub	[%i0], %l0	!load the first char to %l0
+	ldub	[%i0+1],%l1	!load the second(last) char to %l2
+	mov	%l0, %o0
+	call	tolower		!conver the first char to lowercase
+	nop
+	mov	%o0, %l0	!store the lowercased first char back 
+	mov	%l1, %o0	
+	call	tolower		!convert the second char to lowercase
+	nop
+	mov	%o0, %l1	!store the lowercased second char back
+	cmp	%l0, %l1
+	be	true		!branch to true if these two chars are equal
+	nop
+		
 
 false:
 	mov	0,%i0		!return 0 for false
@@ -66,6 +129,12 @@ true:
 	ba	end
 	nop
 
+error:
+	mov	%g0, %o0
+	call	perror
+	nop
+	ba	false		!after calling perror, return 0
+	nop
 end:
 	ret
 	restore
