@@ -27,7 +27,7 @@
  * Error Conditions: None
  * Return: 1 if true; 0 otherwise
  * Registers Used:
- * TODO
+ * 
  *	%g0 - used as 0 (NULL)
  *	%i0 - the passed in string(arg1)
  *	%l0 - the first char
@@ -35,6 +35,7 @@
  *	%l2 - the allocated new string pointer
  *	%l3 - store the length-1(offset) of the string	
  *	%l4 - store the value of length-2 
+ *	%i0 - the passed in arg1 and the final return value
  */
 
  isStringPalindrome:
@@ -76,7 +77,8 @@
 	!if the first&last chars are equal, compare the middle section
 	sub	%l3,1,%l4	!store the value of length-2 in %l4
 	!allocate memory for a new string(the middle section)
-	mov	%l4, %o0
+	mov	%l3, %o0	!we actually need to allocate one more byte
+				!to ensure there is terminating byte \0
 	mov	1, %o1		!the size of a char is 1 byte
 	call	calloc		!call calloc 
 	nop
@@ -85,6 +87,7 @@
 	cmp	%o0, 0		!check if calloc fails(return NULL)
 	be	error
 	nop
+
 	mov	%o0, %l2	!put the allocated memory area in %l2
 	!copy the middle section by calling strncpy
 	mov	%l2, %o0
@@ -101,6 +104,9 @@
 	! back from recursion
 	mov	%o0, %i0	!put the return value from recursive call
 				!back to the final return value
+	mov	%l2, %o0
+	call	free		!free the previously allocated memory
+	nop
 	ba	end
 	nop
 length2:
@@ -124,7 +130,7 @@ false:
 	ba	end
 	nop
 	
-true:
+true:	
 	mov	1,%i0		!return 1 for true
 	ba	end
 	nop
@@ -135,6 +141,7 @@ error:
 	nop
 	ba	false		!after calling perror, return 0
 	nop
-end:
-	ret
-	restore
+end:	
+	nop
+	ret			!return from the subroutine
+	restore			!restore caller's window
