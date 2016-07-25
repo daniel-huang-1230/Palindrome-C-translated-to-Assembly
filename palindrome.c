@@ -164,17 +164,21 @@ int main(int argc, char *argv[])
   else if(openFile==NULL) {
 
 
-  /*implement the default stdin input cases*/
+    /*implement the default stdin input cases*/
 
     if(flag==SFLAG) {/*if the string flag is set*/
 
       char inputStr[BUFSIZ];
-     /*read the input from keyboard*/
-     while(fgets(inputStr,BUFSIZ,stdin)!=NULL) {
-        printf("%s\n",inputStr);
+      /*read the input from keyboard*/
+      while(fgets(inputStr,BUFSIZ,stdin)!=NULL) {
+
+        /*remove traling newline, if there.*/
+        if((strlen(inputStr)>0)&&(inputStr[strlen(inputStr)-1]=='\n')){
+          inputStr[strlen(inputStr)-1]='\0'; 
+        }
         if(isStringPalindrome(inputStr)==1) {
-         /* (void)printf(IS_STRING_PALINDROME,inputStr);*/
-          
+          (void)printf(IS_STRING_PALINDROME,inputStr);
+
           addPalindrome(&palin,inputStr);
 
         }
@@ -182,7 +186,6 @@ int main(int argc, char *argv[])
           (void)printf(NOT_STRING_PALINDROME,inputStr);
 
         }
-
 
       }
       /*print all seen palindromes*/
@@ -201,18 +204,50 @@ int main(int argc, char *argv[])
       }
 
     }
-  
-
-  else if(flag==BFLAG) {/*if the bit flag is set*/
 
 
-    char* a=".";
-    if(isBinaryPalindrome(a)==1){
-      (void)printf("yes!!!");
+    else if(flag==BFLAG) {/*if the bit flag is set*/
+
+      char inputStr[BUFSIZ];
+      /*read the standard input from keyboard*/
+      while(fgets(inputStr,BUFSIZ,stdin)!=NULL) {
+
+        /*remove traling newline, if there.*/
+        if((strlen(inputStr)>0)&&(inputStr[strlen(inputStr)-1]=='\n')){
+          inputStr[strlen(inputStr)-1]='\0'; 
+        }
+        if(isBinaryPalindrome(inputStr)==1) {
+          (void)printf(IS_BIN_PALINDROME,inputStr);
+
+          addPalindrome(&palin,inputStr);
+
+        }
+        else {
+          (void)printf(NOT_BIN_PALINDROME,inputStr);
+
+        }
+
+      }
+      /*print all seen palindromes*/
+      if(palin.number!=0) {
+        (void)printf(SEEN,palin.number);
+        int i;
+        for(i=0;i<palin.number;i++) {
+          (void)printf("%s\n",palin.palindrome[i]);
+
+        }
+
+      }
+      else if(palin.number==0) {
+
+        (void)printf(NONE_SEEN);
+      }
+
     }
-  }
-}
 
-free(array);
-return EXIT_SUCCESS;
+  }
+
+
+  free(array);
+  return EXIT_SUCCESS;
 }

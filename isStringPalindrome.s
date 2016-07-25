@@ -45,7 +45,6 @@
 	cmp	%i0, 0	
 	be	false
 	nop
-	
 	mov	%i0,%o0		!prepare arguments for strlen
 	call	strlen		!call strlen
 	nop
@@ -61,12 +60,15 @@
 	nop
 	! if the length of string is greater than 2
 	sub	%o0,1, %l3	!copy (length-1) to %l3
-	mov	%i0, %o0	!prepare argument for tolower
+
+	ldub	[%i0], %l0
+	
+	mov	%l0, %o0	!prepare argument for tolower
 	call	tolower
 	nop
 	mov	%o0, %l0
 	ldub	[%i0+%l3], %l1	!load the last char to %l1
-	stb	%l1, [%o0]
+	mov	%l1, %o0
 	call	tolower		!convert the last char to lowercase
 	nop
 	mov	%o0, %l1

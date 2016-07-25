@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "palindrome.h"
-
+#include <string.h>
 
 /* Function name: areBytesReversed()
  * Function prototype: int areBytesReversed(unsigned char byte1, 
@@ -34,7 +34,8 @@ int areBytesReversed(unsigned char byte1, unsigned char byte2){
   int i;
   for(i=0; i<EIGHTBITS; i++) {
 
-    unsigned char temp=byte1;
+    unsigned char temp=0;
+    (void)memcpy(&temp,&byte1,sizeof(byte1));
     temp >>=i;
     temp <<=(EIGHTBITS-1);
     temp >>=i;
