@@ -29,12 +29,12 @@ int main(int argc, char *argv[])
   int opt;
   int flag=0;
   char *openFile;
-  
+
   /*initialize a palindromes struct*/
   struct palindromes palin;
   palin.number=0;
-  char* strArr[BUFSIZ];
-  palin.palindrome=strArr;
+  char** array=malloc(sizeof(char*)*palin.number);
+  palin.palindrome=array;
   while((opt=getopt(argc, argv, OPT_STRING))!=-1){
 
     if((opt=='s'||opt=='b')&&flag!=0)
@@ -61,25 +61,25 @@ int main(int argc, char *argv[])
     if(opt=='?')
 
     {
-    /*cases when -f is specified without following argument*/
-    (void)fprintf(stderr,USAGE);
-    return EXIT_FAILURE;
-
-    }
-  }
-
-/*handle cases when neither -b nor -s has been specified*/
-  if(flag==0)
-  { 
-      (void)fprintf(stderr,MISSING_FLAGS); 
+      /*cases when -f is specified without following argument*/
       (void)fprintf(stderr,USAGE);
       return EXIT_FAILURE;
 
     }
+  }
+
+  /*handle cases when neither -b nor -s has been specified*/
+  if(flag==0)
+  { 
+    (void)fprintf(stderr,MISSING_FLAGS); 
+    (void)fprintf(stderr,USAGE);
+    return EXIT_FAILURE;
+
+  }
 
 
 
-/*handle cases for passing in extra arguments*/
+  /*handle cases for passing in extra arguments*/
   if(argv[optind]!=NULL)
   {
     (void)fprintf(stderr,TOO_MANY_ARGS,argv[optind]);
@@ -87,69 +87,69 @@ int main(int argc, char *argv[])
   }
 
 
-/*-f filename option is used*/
-if(openFile!=NULL) {
-  FILE *filePtr;
+  /*-f filename option is used*/
+  if(openFile!=NULL) {
+    FILE *filePtr;
 
-  filePtr=fopen(openFile,OPEN_MODE);
+    filePtr=fopen(openFile,OPEN_MODE);
 
-  
-  /*handle the error case when the file is opened unsuccessfully*/
-  if(filePtr==NULL)
-  {
-    char errStr[BUFSIZ];
-    (void)snprintf(errStr,BUFSIZ,"%s", openFile);
-    perror(errStr);
+
+    /*handle the error case when the file is opened unsuccessfully*/
+    if(filePtr==NULL)
+    {
+      char errStr[BUFSIZ];
+      (void)snprintf(errStr,BUFSIZ,"%s", openFile);
+      perror(errStr);
       return EXIT_FAILURE;
-  }
-
-  /*create a local array of chars*/
-  char str[BUFSIZ];
-  char *ret;
-  
-  char newline='\n';
-  /*get one line at a time from the file*/
-  while(fgets(str,BUFSIZ,filePtr)) {
-    ret=strchr(str,newline);
-    if(ret!=NULL){
-    /*if a '\n' is found at the end of the line*/
-    *ret='\0'; /*replace it with '\0'*/
     }
-    /*call the appropriate function to check if it's palindrome*/
-    if(flag==SFLAG)
-    {
-      if(isStringPalindrome(str)==1) {
-      (void)printf(IS_STRING_PALINDROME,str); 
-      /*call addPalindrome to keep track of the palindromes found*/
-      addPalindrome(&palin,str);
 
-       }
-       else {
-      (void)printf(NOT_STRING_PALINDROME,str);
-       }
+    /*create a local array of chars*/
+    char str[BUFSIZ];
+    char *ret;
+
+    char newline='\n';
+    /*get one line at a time from the file*/
+    while(fgets(str,BUFSIZ,filePtr)) {
+      ret=strchr(str,newline);
+      if(ret!=NULL){
+        /*if a '\n' is found at the end of the line*/
+        *ret='\0'; /*replace it with '\0'*/
+      }
+      /*call the appropriate function to check if it's palindrome*/
+      if(flag==SFLAG)
+      {
+        if(isStringPalindrome(str)==1) {
+          (void)printf(IS_STRING_PALINDROME,str); 
+          /*call addPalindrome to keep track of the palindromes found*/
+          addPalindrome(&palin,str);
+
+        }
+        else {
+          (void)printf(NOT_STRING_PALINDROME,str);
+        }
 
       }
-    else if(flag==BFLAG)
-    {
-      if(isBinaryPalindrome(str)==1) {
-      (void)printf(IS_BIN_PALINDROME,str);
-      /*call addPalindrome to keep track of the palindromes found*/
-      addPalindrome(&palin,str);
-      }
-      else {
-      (void)printf(NOT_BIN_PALINDROME,str);
-      }
+      else if(flag==BFLAG)
+      {
+        if(isBinaryPalindrome(str)==1) {
+          (void)printf(IS_BIN_PALINDROME,str);
+          /*call addPalindrome to keep track of the palindromes found*/
+          addPalindrome(&palin,str);
+        }
+        else {
+          (void)printf(NOT_BIN_PALINDROME,str);
+        }
 
+      }
     }
-  }
-      /*print out all palindromes */
+    /*print out all palindromes */
     if(palin.number!=0) {
-    (void)printf(SEEN,palin.number);
-    int i;
-    for(i=0;i<palin.number;i++) {
-    (void)printf("%s\n",palin.palindrome[i]);
+      (void)printf(SEEN,palin.number);
+      int i;
+      for(i=0;i<palin.number;i++) {
+        (void)printf("%s\n",palin.palindrome[i]);
 
-    }
+      }
 
     }
     else if(palin.number==0) {
@@ -158,36 +158,61 @@ if(openFile!=NULL) {
     }
 
 
-(void)fclose(filePtr); /*close the file at the end*/
-}
-
-else if(openFile==NULL) {
-
-/*implement the default stdin input cases*/
-
-if(flag==SFLAG) {/*if the string flag is set*/
-
-char inputStr[BUFSIZ];
-scanf("%s",inputStr);
-
-if(isStringPalindrome(inputStr)==1){
-  (void)printf("Yes! it is a palindrome\n");
-}
-else {
-
-  (void)printf("it's NOT a palindrome\n");
-}
-
+    (void)fclose(filePtr); /*close the file at the end*/
   }
 
-else if(flag==BFLAG) {/*if the bit flag is set*/
+  else if(openFile==NULL) {
 
 
-  char* a=".";
-   if(isBinaryPalindrome(a)==1)
-   {(void)printf("yes!!!");
-  }
-  }
+  /*implement the default stdin input cases*/
+
+    if(flag==SFLAG) {/*if the string flag is set*/
+
+      char inputStr[BUFSIZ];
+     /*read the input from keyboard*/
+     while(fgets(inputStr,BUFSIZ,stdin)!=NULL) {
+        printf("%s\n",inputStr);
+        if(isStringPalindrome(inputStr)==1) {
+         /* (void)printf(IS_STRING_PALINDROME,inputStr);*/
+          
+          addPalindrome(&palin,inputStr);
+
+        }
+        else {
+          (void)printf(NOT_STRING_PALINDROME,inputStr);
+
+        }
+
+
+      }
+      /*print all seen palindromes*/
+      if(palin.number!=0) {
+        (void)printf(SEEN,palin.number);
+        int i;
+        for(i=0;i<palin.number;i++) {
+          (void)printf("%s\n",palin.palindrome[i]);
+
+        }
+
+      }
+      else if(palin.number==0) {
+
+        (void)printf(NONE_SEEN);
+      }
+
     }
-  return EXIT_SUCCESS;
+  
+
+  else if(flag==BFLAG) {/*if the bit flag is set*/
+
+
+    char* a=".";
+    if(isBinaryPalindrome(a)==1){
+      (void)printf("yes!!!");
+    }
+  }
+}
+
+free(array);
+return EXIT_SUCCESS;
 }
