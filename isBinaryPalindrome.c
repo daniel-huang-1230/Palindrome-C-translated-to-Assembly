@@ -67,9 +67,10 @@ int isBinaryPalindrome(const char* const str) {
     char *newStr;
     newStr=calloc(strLength-1,sizeof(char));
     if(newStr==NULL) {
-      char* errStr=" ";
-      perror(errStr); /*call perror and exit if calloc fails*/
-      return EXIT_FAILURE;
+      char* errStr="";
+      perror(errStr); /*call perror and return if calloc fails*/
+      free(newStr);      
+      return 0;
     }
     /*call isBinaryPalindrome recursively*/
     int ret;/*store the return value*/

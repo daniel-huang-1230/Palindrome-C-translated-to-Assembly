@@ -29,7 +29,12 @@ int main(int argc, char *argv[])
   int opt;
   int flag=0;
   char *openFile;
-
+  
+  /*initialize a palindromes struct*/
+  struct palindromes palin;
+  palin.number=0;
+  char* strArr[BUFSIZ];
+  palin.palindrome=strArr;
   while((opt=getopt(argc, argv, OPT_STRING))!=-1){
 
     if((opt=='s'||opt=='b')&&flag!=0)
@@ -101,34 +106,56 @@ if(openFile!=NULL) {
   /*create a local array of chars*/
   char str[BUFSIZ];
   char *ret;
+  
+  char newline='\n';
   /*get one line at a time from the file*/
   while(fgets(str,BUFSIZ,filePtr)) {
-    char newline='\n';
     ret=strchr(str,newline);
     if(ret!=NULL){
     /*if a '\n' is found at the end of the line*/
-    ret='\0'; /*replace it with '\0'*/
+    *ret='\0'; /*replace it with '\0'*/
     }
     /*call the appropriate function to check if it's palindrome*/
     if(flag==SFLAG)
     {
-      if(isStringPalindrome(str)!=0) {
-      (void)printf("testing assembly code...\n");
-      
+      if(isStringPalindrome(str)==1) {
+      (void)printf(IS_STRING_PALINDROME,str); 
+      /*call addPalindrome to keep track of the palindromes found*/
+      addPalindrome(&palin,str);
 
-
-
-
+       }
+       else {
+      (void)printf(NOT_STRING_PALINDROME,str);
        }
 
       }
-    
+    else if(flag==BFLAG)
+    {
+      if(isBinaryPalindrome(str)==1) {
+      (void)printf(IS_BIN_PALINDROME,str);
+      /*call addPalindrome to keep track of the palindromes found*/
+      addPalindrome(&palin,str);
+      }
+      else {
+      (void)printf(NOT_BIN_PALINDROME,str);
+      }
 
-
+    }
   }
+      /*print out all palindromes */
+    if(palin.number!=0) {
+    (void)printf(SEEN,palin.number);
+    int i;
+    for(i=0;i<palin.number;i++) {
+    (void)printf("%s\n",palin.palindrome[i]);
 
+    }
 
+    }
+    else if(palin.number==0) {
 
+      (void)printf(NONE_SEEN);
+    }
 
 
 (void)fclose(filePtr); /*close the file at the end*/
@@ -158,7 +185,7 @@ else if(flag==BFLAG) {/*if the bit flag is set*/
 
   char* a=".";
    if(isBinaryPalindrome(a)==1)
-   {printf("yes!!!");
+   {(void)printf("yes!!!");
   }
   }
     }
