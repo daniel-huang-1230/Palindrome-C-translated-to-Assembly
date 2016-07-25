@@ -26,16 +26,25 @@
  * Return: return 1 for true; 0 for false
  */
 
- int areBytesReversed(unsigned char byte1, unsigned char byte2){
+#define  EIGHTBITS 8
+int areBytesReversed(unsigned char byte1, unsigned char byte2){
 
-if(byte1==byte2)
-{
-  return 1;
+  unsigned char reversedByte1=0;
+  /*first reverse byte1*/
+  int i;
+  for(i=0; i<EIGHTBITS; i++) {
+
+    unsigned char temp=byte1;
+    temp >>=i;
+    temp <<=(EIGHTBITS-1);
+    temp >>=i;
+    reversedByte1+=temp;
+
+  }
+  /*compare the revered byte1 with byte2 */
+  if(reversedByte1==byte2) {
+    return 1; /*return 1 for true*/
+  }
+
+  return 0; /*return 0 for false*/
 }
-
-    return 0;
-
-
-
-
- }

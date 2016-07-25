@@ -153,8 +153,14 @@ else {
 
   }
 
+else if(flag==BFLAG) {/*if the bit flag is set*/
 
 
-}
+  char* a=".";
+   if(isBinaryPalindrome(a)==1)
+   {printf("yes!!!");
+  }
+  }
+    }
   return EXIT_SUCCESS;
 }
