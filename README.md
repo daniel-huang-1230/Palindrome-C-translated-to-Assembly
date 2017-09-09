@@ -1,12 +1,27 @@
-Filename: README
-Author: Daniel Huang
-Userid:cs30ubp
-Date: 07/25/2016
+# Project Overview
+
+ This project is a personal programming assignment from the course **Computer Organization and System Programming"" at 
+ **UC San Diego**. The goal of the course overall is to help us learn the basics of **x86 assembly** and along with some **C** 
+ programming. The palindrome.c program is simple and straightforward, but the real challenge lies in where we, as students, had
+ to translate the program from **C** to **assembly**. Today, assembly language is used primarily for direct hardware manipulation,
+ access to specialized processor instructions, or to address critical performance issues. Typical uses are **device drivers**, 
+ **low-level embedded systems**, and **real-time systems**.
+ 
+ 
+ # Language
+  This program consists both **C** and **assembly** language
 
 
 
+
+# Date: 07/25/2016
+
+
+
+
+**What I did**:
 1. This program would take in input, either from a file or from the keyboard, and 
-   determine if it is a palindrome.
+   determine if it is a **palindrome**.
    Palindrome means a word reads forward the same as it reads backward.
    The program can act differently depending on how the user specify options.
    It can read the word as it is and it can also check the word on its bits level to 
@@ -14,7 +29,7 @@ Date: 07/25/2016
    In the end, the program would print out the tracked number of total palindromes 	
    found to the terminal.
 
-2. With the supplied Makefile from the public directory, just type in “make” in the 
+2. With the supplied **Makefile** from the public directory, just type in “**make**” in the 
    command line to compile all source files.
 
 3. To run the program, assuming the executable name is palindrome, type something as 
@@ -69,5 +84,9 @@ avsvv: No such file or directory
    for the inputs from keyboard. All inputs must be recorded and checked by calling 
    my palindrome functions and print out the results when ctrl+D is typed in.
 
-7. Make sure to compile all files on SPARC machines with the provided Makefile.
+7. Make sure to compile all files on **SPARC** machines with the provided Makefile.
+
+
+# Author 
+[@Daniel](https://www.linkedin.com/in/daniel-huang-443546115/)
  
