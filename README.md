@@ -9,7 +9,7 @@
  
  
  # Language
-  This program consists both **C** and **assembly** language
+  This program consists of both **C** and **assembly** language
 
 
 
